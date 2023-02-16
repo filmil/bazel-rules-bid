@@ -27,7 +27,7 @@ go_register_toolchains(version = "1.18.3")
 load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies", "go_repository")
 gazelle_dependencies()
 
-load("//build/bid:repositories.bzl", "bazel_bid_repositories")
+load("//build:repositories.bzl", "bazel_bid_repositories")
 bazel_bid_repositories()
 
 load("@gotopt2//build:deps.bzl", "gotopt2_dependencies")
