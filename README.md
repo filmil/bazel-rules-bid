@@ -1,5 +1,7 @@
 # Bazel rules for "build-in-docker" (or "bid")
 
+![example workflow](https://github.com/filmil/bazel-rules-bid/actions/workflows/build.yml/badge.svg)
+
 
 ## What is "build-in-docker" (bid)?
 
