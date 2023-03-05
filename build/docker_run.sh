@@ -62,6 +62,9 @@ flags:
 - name: "cd-to-dir-reference"
   type: bool
   help: "If set, the script will CD into the reference directory before executing the command."
+- name: "scratch-dir"
+  type: string
+  help: "A docker expression host_dir:container_dir that will be mounted read-write"
 EOF
 )
 if [[ "$?" == "11" ]]; then
@@ -109,11 +112,17 @@ if [[ "${gotopt2_cd_to_dir_reference}" == "true" ]]; then
   _reference_dir="${_output_dir}"
 fi
 
+_scratch_dir=""
+if [[ "$gotopt2_scratch_dir" != "" ]]; then
+  _scratch_dir="-v ${PWD}/${gotopt2_scratch_dir}:rw"
+fi
+
 docker run --rm --interactive \
   -u "${_uid}:${_gid}" \
   -v "${_build_root}:${_build_root}:rw" \
   -v "${_real_source_dir}:${_real_source_dir}:ro" \
   -v "${_reference_dir}:/src" \
+  ${_scratch_dir} \
   -w "/src" \
   "${gotopt2_container}" \
     bash -c "${_cmdline}"
