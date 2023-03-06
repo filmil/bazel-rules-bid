@@ -22,7 +22,7 @@ https://bazel.build/install/docker-container
 This is a refactoring of a hack I did for https://github.com/filmil/bazel-ebook.
 
 The ebook toolchain setup was very complex. It included installing plenty of
-Python, pandoc and dependencise, which are notoriously hard to get right.
+Python, pandoc and dependencies, which are notoriously hard to get right.
 
 I worked around the whole issue by creating a Docker container which has a
 regular Debian system with all the tools installed, and writing bazel rules that
