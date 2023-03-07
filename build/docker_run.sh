@@ -65,6 +65,8 @@ flags:
 - name: "scratch-dir"
   type: string
   help: "A docker expression host_dir:container_dir that will be mounted read-write"
+- name: "tmp-dir"
+  type: string
 EOF
 )
 if [[ "$?" == "11" ]]; then
@@ -117,11 +119,22 @@ if [[ "$gotopt2_scratch_dir" != "" ]]; then
   _scratch_dir="-v ${PWD}/${gotopt2_scratch_dir}:rw"
 fi
 
-docker run --rm --interactive \
+if [[ "$gotopt2_tmp_dir" != "" ]]; then
+  export XDG_RUNTIME_DIR="${PWD}/${gotopt2_tmp_dir}"
+  export TMPDIR="${XDG_RUNTIME_DIR}"
+fi
+
+export PATH=$PATH:/usr/bin
+
+podman \
+  --root=${TMPDIR} \
+  run \ 
+  --rm --interactive \
   -u "${_uid}:${_gid}" \
   -v "${_build_root}:${_build_root}:rw" \
   -v "${_real_source_dir}:${_real_source_dir}:ro" \
   -v "${_reference_dir}:/src" \
+  -v "/home/filmil/.local/share:/home/filmil/.local/share:rw" \
   ${_scratch_dir} \
   -w "/src" \
   "${gotopt2_container}" \
