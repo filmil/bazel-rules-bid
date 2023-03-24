@@ -65,6 +65,9 @@ flags:
 - name: "scratch-dir"
   type: string
   help: "A docker expression host_dir:container_dir that will be mounted read-write"
+- name : "source-dir"
+  type: string
+  help: "The absolute path to the source dir, used for mounting source files."
 EOF
 )
 if [[ "$?" == "11" ]]; then
@@ -90,14 +93,23 @@ fi
 
 # Try to follow the symlinks of the input file as far as we can.  Once we're
 # done, the directory that we're left with is the directory we need to mount
-# in.
+# in, i.e. the actual path to the source directory.
 readonly _real_source_dir="$(dirname $(readlink -m ${gotopt2_dir_reference}))"
+
+# This is the output directory (needs to be mounted writable).
 readonly _output_dir="$(realpath $(dirname ${gotopt2_dir_reference}))"
 
 # Figure out the bazel build root: using the knowledge that the build root
 # seems to have the string "/_bazel_" at the beginning of the directory that
 # is the user build root directory.
 readonly _build_root="${PWD%%/_bazel_*}"
+
+### HACK! HACK! HACK!
+# User's home dir is usually here somewhere. We're assuming that the source
+# code is checked out here.  If not, there will be... trouble.
+#
+# I think I can fix this, but it will take a bit of time.
+readonly _home_dir="${_build_root%%.cache/*}"
 
 # Required, so that the docker command runs as your UID:GID, so that the output
 # file is created with your permissions.  Otherwise it will get created as
@@ -117,11 +129,17 @@ if [[ "$gotopt2_scratch_dir" != "" ]]; then
   _scratch_dir="-v ${PWD}/${gotopt2_scratch_dir}:rw"
 fi
 
+_source_dir=""
+if [[ "$gotopt2_source_dir" != "" ]]; then
+  _source_dir ="-v ${gotopt2_source_dir}:${gotopt2_source_dir}"
+fi
+
 docker run --rm --interactive \
   -u "${_uid}:${_gid}" \
-  -v "${_build_root}:${_build_root}:rw" \
+  -v "${_home_dir}:${_home_dir}:rw" \
   -v "${_real_source_dir}:${_real_source_dir}:ro" \
   -v "${_reference_dir}:/src" \
+  ${_source_dir} \
   ${_scratch_dir} \
   -w "/src" \
   "${gotopt2_container}" \

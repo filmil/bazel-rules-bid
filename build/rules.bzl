@@ -11,14 +11,18 @@
 #   script_path: (string) The full path to the script to invoke
 #   dir_reference: (string) The path to a file used for figuring out
 #       the reference directories (build root and repo root).
-def run_docker_cmd(container, script_path, dir_reference, scratch_dir=""):
+#   source_dir: (string) The absolute path of the source tree location in
+#       the host's filesystem.
+def run_docker_cmd(container, script_path, dir_reference, scratch_dir="", source_dir=""):
     return """{script} \
 --container={container} \
 --dir-reference={dir_reference} \
+--source-dir={source_dir} \
 --scratch-dir={scratch_dir}""".format(
             script=script_path,
             container=container,
             dir_reference=dir_reference,
             scratch_dir=scratch_dir,
+            source_dir=source_dir,
        )
 
