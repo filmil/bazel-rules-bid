@@ -5,7 +5,7 @@
 
 ## What is "build-in-docker" (bid)?
 
-Bid allows you to create a build rule that runs a bazel build step inside a
+Bid allows you to create a build rule that runs a *single* bazel build action inside a
 Docker container.
 
 ## What is bid *not*?
