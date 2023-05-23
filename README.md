@@ -14,7 +14,8 @@ Docker container.
 Bazel rules for building containers.
 
 * Bid is also *different* from running bazel from a container described at
-https://bazel.build/install/docker-container
+https://bazel.build/install/docker-container. That is a way to run the *entire* bazel
+build inside a docker container.
 
 
 ## Why bid?
