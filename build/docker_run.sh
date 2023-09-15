@@ -113,7 +113,7 @@ readonly _home_dir="${_build_root%%.cache/*}"
 
 # Required, so that the docker command runs as your UID:GID, so that the output
 # file is created with your permissions.  Otherwise it will get created as
-# owned by "root:root", and bazel will complain that the target didn't 
+# owned by "root:root", and bazel will complain that the target didn't
 readonly _uid="$(id -u)"
 readonly _gid="$(id -g)"
 
@@ -134,7 +134,18 @@ if [[ "$gotopt2_source_dir" != "" ]]; then
   _source_dir ="-v ${gotopt2_source_dir}:${gotopt2_source_dir}"
 fi
 
-docker run --rm --interactive \
+_xdg_dir="${_output_dir}/_xdg"
+
+_runtime_dir="${_xdg_dir}/run/user"
+mkdir -p "${_runtime_dir}"
+
+_local_data_dir="${_xdg_dir}/local/data"
+mkdir -p "${_local_data_dir}"
+
+XDG_RUNTIME_DIR="${_runtime_dir}" \
+XDG_DATA_HOME="${_local_data_dir}" \
+/usr/bin/podman run --log-level=debug \
+  --rm --interactive \
   -u "${_uid}:${_gid}" \
   -v "${_home_dir}:${_home_dir}:rw" \
   -v "${_real_source_dir}:${_real_source_dir}:ro" \
