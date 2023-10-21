@@ -21,7 +21,7 @@ def bazel_bid_repositories():
         git_repository(
             name = "gotopt2",
             remote = "https://github.com/filmil/gotopt2",
-            commit = "97d6b1b0663a976eba231cac93aefbfdca52f9d6",
-            shallow_since = "1593765180 -0700",
+            commit = "184f9765881f7da793135bdd64dd99eebbfe0e42",
+            shallow_since = "1697848436 -0700",
         )
 

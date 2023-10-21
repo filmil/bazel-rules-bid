@@ -1,5 +1,7 @@
 #! /bin/bash
 
+set -x
+
 # Copyright (C) 2020 Google Inc.
 #
 # This file has been licensed under Apache 2.0 license.  Please see the LICENSE
@@ -68,6 +70,15 @@ flags:
 - name : "source-dir"
   type: string
   help: "The absolute path to the source dir, used for mounting source files."
+- name: "envs"
+  type: stringlist
+  help: "Comma-separated key value pairs for env variables."
+- name: "mounts"
+  type: stringlist
+  help: "Comma-separated key value pairs for mounts."
+- name: "tools"
+  type: stringlist
+  help: "Comma-separated list of tool files"
 EOF
 )
 if [[ "$?" == "11" ]]; then
@@ -134,11 +145,26 @@ if [[ "$gotopt2_source_dir" != "" ]]; then
   _source_dir ="-v ${gotopt2_source_dir}:${gotopt2_source_dir}"
 fi
 
+_envs=()
+if [[ "${gotopt2_envs__list}" != "" ]]; then
+  for one_env in ${gotopt2_envs__list[@]}; do
+    _envs+=("-e" "${one_env}")
+  done
+fi
+
+# Provide tools binaries here.
+readonly _tools_dir="$(mktemp -d --tmpdir=${_output_dir} tools-XXXXXX)"
+if [[ "${#gotopt2_tools__list[@]}" != 0 ]]; then
+  cp ${gotopt2_tools__list[@]} "${_tools_dir}"
+fi
+
 docker run --rm --interactive \
   -u "${_uid}:${_gid}" \
   -v "${_home_dir}:${_home_dir}:rw" \
   -v "${_real_source_dir}:${_real_source_dir}:ro" \
   -v "${_reference_dir}:/src" \
+  -v "${_tools_dir}:/tools:ro" \
+  ${_envs[*]} \
   ${_source_dir} \
   ${_scratch_dir} \
   -w "/src" \
