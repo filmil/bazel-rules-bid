@@ -1,7 +1,5 @@
 #! /bin/bash
 
-set -x
-
 # Copyright (C) 2020 Google Inc.
 #
 # This file has been licensed under Apache 2.0 license.  Please see the LICENSE
@@ -79,6 +77,13 @@ flags:
 - name: "tools"
   type: stringlist
   help: "Comma-separated list of tool files"
+- name: "freeargs"
+  type: stringlist
+  help: "Comma-separated list of free flags to apply"
+- name: "src-mount"
+  type: string
+  default: "/src"
+  help: "The writable work directory to mount"
 EOF
 )
 if [[ "$?" == "11" ]]; then
@@ -152,6 +157,20 @@ if [[ "${gotopt2_envs__list}" != "" ]]; then
   done
 fi
 
+_mounts=()
+if [[ "${gotopt2_mounts__list}" != "" ]]; then
+  for one_mount in ${gotopt2_mounts__list[@]}; do
+    _mounts+=("-v" "${one_mount}")
+  done
+fi
+
+_freeargs=()
+if [[ "${gotopt2_freeargs__list}" != "" ]]; then
+  for one in ${gotopt2_freeargs__list[@]}; do
+    _freeargs+=("${one}")
+  done
+fi
+
 # Provide tools binaries here.
 readonly _tools_dir="$(mktemp -d --tmpdir=${_output_dir} tools-XXXXXX)"
 if [[ "${#gotopt2_tools__list[@]}" != 0 ]]; then
@@ -162,12 +181,14 @@ docker run --rm --interactive \
   -u "${_uid}:${_gid}" \
   -v "${_home_dir}:${_home_dir}:rw" \
   -v "${_real_source_dir}:${_real_source_dir}:ro" \
-  -v "${_reference_dir}:/src" \
+  -v "${_reference_dir}:${gotopt2_src_mount}" \
   -v "${_tools_dir}:/tools:ro" \
+  ${_mounts[*]} \
   ${_envs[*]} \
   ${_source_dir} \
   ${_scratch_dir} \
-  -w "/src" \
+  -w "${gotopt2_src_mount}" \
+  ${_freeargs[*]} \
   "${gotopt2_container}" \
     bash -c "${_cmdline}"
 

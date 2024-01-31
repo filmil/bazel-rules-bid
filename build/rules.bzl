@@ -22,6 +22,8 @@ def run_docker_cmd(
     mounts=None,
     envs=None,
     tools=None,
+    freeargs=[],
+    workdir_name=None,
 ):
 
     ret = """{script} \
@@ -41,6 +43,10 @@ def run_docker_cmd(
         ret += " --envs={}".format(envs)
     if tools:
         ret += " --tools={}".format(tools)
+    if freeargs:
+        ret += " --freeargs={}".format(",".join(freeargs))
+    if workdir_name:
+        ret += " --src-mount={}".format(workdir_name)
 
     return ret
 
