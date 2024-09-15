@@ -147,7 +147,7 @@ fi
 
 _source_dir=""
 if [[ "$gotopt2_source_dir" != "" ]]; then
-  _source_dir ="-v ${gotopt2_source_dir}:${gotopt2_source_dir}"
+  _source_dir="-v ${gotopt2_source_dir}:${gotopt2_source_dir}"
 fi
 
 _envs=()

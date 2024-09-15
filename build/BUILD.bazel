@@ -6,9 +6,9 @@
 sh_binary(
   name = "docker_run",
   srcs = ["docker_run.sh"],
-  deps = ["@bazel_tools//tools/bash/runfiles"],
   visibility = ["//visibility:public"],
   data = [
     "@gotopt2//cmd/gotopt2:gotopt2",
+    "@bazel_tools//tools/bash/runfiles",
   ],
 )
