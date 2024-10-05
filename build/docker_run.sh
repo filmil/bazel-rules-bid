@@ -129,7 +129,7 @@ readonly _home_dir="${_build_root%%.cache/*}"
 
 # Required, so that the docker command runs as your UID:GID, so that the output
 # file is created with your permissions.  Otherwise it will get created as
-# owned by "root:root", and bazel will complain that the target didn't 
+# owned by "root:root", and bazel will complain.
 readonly _uid="$(id -u)"
 readonly _gid="$(id -g)"
 
@@ -142,7 +142,9 @@ fi
 
 _scratch_dir=""
 if [[ "$gotopt2_scratch_dir" != "" ]]; then
-  _scratch_dir="-v ${PWD}/${gotopt2_scratch_dir}:rw"
+  _stripped_pwd="${PWD%/}" # Strip trailing slash.
+  _stripped_scratch="${gotopt2_scratch_dir#/}" # Strips heading slash.
+  _scratch_dir="-v ${_stripped_pwd}/${_stripped_scratch}:rw"
 fi
 
 _source_dir=""
