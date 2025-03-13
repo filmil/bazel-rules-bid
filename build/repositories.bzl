@@ -28,10 +28,3 @@ def bazel_bid_repositories():
         sha256 = "8f9ee2dc10c1ae514ee599a8b42ed99fa262b757058f65ad3c384289ff70c4b8",
     )
 
-    maybe(
-        git_repository,
-        name = "gotopt2",
-        remote = "https://github.com/filmil/gotopt2",
-        commit = "21c007a22bc51ec580510e5bed4f997f84362e0b",
-    )
-
