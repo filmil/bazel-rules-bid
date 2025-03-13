@@ -32,7 +32,7 @@ bazel_bid_repositories()
 
 http_archive(
     name = "gotopt2",
-    sha256 = "",
+    integrity = "sha256-qFQjgqh4fnHet1UkV38bExd64Yk582iBUi9OrClJGJo=",
     urls = [
         "https://github.com/filmil/gotopt2/releases/download/v1.3.1/gotopt2-linux-amd64.zip",
     ],
