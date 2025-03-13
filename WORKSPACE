@@ -30,8 +30,20 @@ gazelle_dependencies()
 load("//build:repositories.bzl", "bazel_bid_repositories")
 bazel_bid_repositories()
 
-load("@gotopt2//build:deps.bzl", "gotopt2_dependencies")
-gotopt2_dependencies()
+http_archive(
+    name = "gotopt2",
+    sha256 = "",
+    urls = [
+        "https://github.com/filmil/gotopt2/releases/download/v1.3.1/gotopt2-linux-amd64.zip",
+    ],
+    strip_prefix = "gotopt2",
+    build_file_content = """package(default_visibility = ["//visibility:public"])
+filegroup(
+    name = "bin",
+    srcs = [ "gotopt2", ],
+)
+"""
+)
 
 load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
 bazel_skylib_workspace()
