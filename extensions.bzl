@@ -1,10 +1,8 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository", "new_git_repository")
-load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 
 def _bazel_rules_bid_extension_impl(_ctx):
-    maybe(
-        http_archive,
+
+    http_archive(
         name = "gotopt2",
         integrity = "sha256-qFQjgqh4fnHet1UkV38bExd64Yk582iBUi9OrClJGJo=",
         urls = [
