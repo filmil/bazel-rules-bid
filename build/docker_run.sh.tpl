@@ -12,8 +12,6 @@
 #                    --container=some-container:tag \
 #                        command arg1 arg2 arg3
 
-set -eo pipefail
-
 # This magic was copied from runfiles by consulting:
 #   https://stackoverflow.com/questions/53472993/how-do-i-make-a-bazel-sh-binary-target-depend-on-other-binary-targets
 
