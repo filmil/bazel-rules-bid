@@ -13,7 +13,7 @@
 #                    --container=some-container:tag \
 #                        command arg1 arg2 arg3
 
-readonly _gotopt_binary="${1}"
+readonly _gotopt2_binary="${1}"
 shift
 
 # Exit quickly if the binary isn't found. This may happen if the binary location
@@ -23,7 +23,7 @@ if [ -x "$(command -v ${_gotopt2_binary})" ]; then
   exit 240
 fi
 
-GOTOPT2_OUTPUT=$($_gotopt_binary "${@}" <<EOF
+GOTOPT2_OUTPUT=$($_gotopt2_binary "${@}" <<EOF
 flags:
 - name: "container"
   type: string
