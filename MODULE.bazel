@@ -1,6 +1,6 @@
 module(
     name = "bazel_rules_bid",
-    version = "0.2.2",
+    version = "0.2.3",
 )
 
 bazel_dep(
@@ -28,18 +28,6 @@ use_repo(
     "in_gopkg_yaml_v3",
 )
 
-http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-http_archive(
-    name = "gotopt2",
-    integrity = "sha256-qFQjgqh4fnHet1UkV38bExd64Yk582iBUi9OrClJGJo=",
-    urls = [
-        "https://github.com/filmil/gotopt2/releases/download/v1.3.1/gotopt2-linux-amd64.zip",
-    ],
-    strip_prefix = "gotopt2",
-    build_file_content = """package(default_visibility = ["//visibility:public"])
-filegroup(
-    name = "bin",
-    srcs = [ "gotopt2", ],
-)
-"""
-)
+bazel_rules_bid_extension = use_extension(
+    "@bazel_rules_bid//:extensions.bzl", "bazel_rules_bid_extension")
+use_repo(bazel_rules_bid_extension, "gotopt2")

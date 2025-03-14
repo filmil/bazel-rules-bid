@@ -12,11 +12,11 @@ def _bazel_rules_bid_extension_impl(_ctx):
         ],
         strip_prefix = "gotopt2",
         build_file_content = """package(default_visibility = ["//visibility:public"])
-    filegroup(
-        name = "bin",
-        srcs = [ "gotopt2", ],
-    )
-    """
+filegroup(
+    name = "bin",
+    srcs = [ "gotopt2", ],
+)
+"""
     )
 
 
