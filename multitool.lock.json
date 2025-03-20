@@ -1,0 +1,15 @@
+{
+  "$schema": "../../lockfile.schema.json",
+  "gotopt2": {
+    "binaries": [
+        {
+            "kind": "archive",
+            "url": "https://github.com/filmil/gotopt2/releases/download/v2.2.16/gotopt2-linux-amd64.zip",
+            "sha256": "a8542382a8787e71deb75524577f1b13177ae18939f36881522f4eac2949189a",
+            "file": "gotopt2/gotopt2",
+            "os": "linux",
+            "cpu": "x86_64"
+        }
+    ]
+  }
+}
