@@ -8,10 +8,10 @@ sh_binary(
   srcs = ["docker_run.sh"],
   visibility = ["//visibility:public"],
   args = [
-    "$(location @gotopt2//:bin)",
+    "$(location @multitool//tools/gotopt2)",
   ],
   data = [
-    "@gotopt2//:bin",
     "@bazel_tools//tools/bash/runfiles",
+    "@multitool//tools/gotopt2",
   ],
 )
