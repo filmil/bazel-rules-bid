@@ -15,11 +15,10 @@ sh_binary(
   deps = [
     ":resolve",
   ],
-  visibility = ["//visibility:public"],
   data = [
-    "@gotopt2//:bin",
     "@bazel_tools//tools/bash/runfiles",
     "@fshlib//:log",
+    "@multitool//tools/gotopt2",
   ],
 )
 
@@ -28,5 +27,6 @@ sh_library(
   srcs = [
     "resolve_gotopt.bash",
     "resolve_workspace.bash",
+    "@multitool//tools/gotopt2",
   ],
 )
