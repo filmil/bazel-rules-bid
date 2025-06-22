@@ -144,10 +144,15 @@ if [[ "${gotopt2_cd_to_dir_reference}" == "true" ]]; then
 fi
 
 _scratch_dir=""
+_only_dir=""
 if [[ "$gotopt2_scratch_dir" != "" ]]; then
   _stripped_pwd="${PWD%/}" # Strip trailing slash.
   _stripped_scratch="${gotopt2_scratch_dir#/}" # Strips heading slash.
   _scratch_dir="-v ${_stripped_pwd}/${_stripped_scratch}:rw"
+  _only_dir="${_stripped_pwd}/${_stripped_scratch%:*}"
+  echo --- AT BEGIN: "${_only_dir}"
+  ls -la "${_only_dir}" || echo "nothing?"
+  echo ---
 fi
 
 _source_dir=""
@@ -182,6 +187,8 @@ if [[ "${#gotopt2_tools__list[@]}" != 0 ]]; then
   cp ${gotopt2_tools__list[@]} "${_tools_dir}"
 fi
 
+# XXX: Does this slow things down too much?
+sync
 docker run --rm --interactive \
   -u "${_uid}:${_gid}" \
   -v "${_home_dir}:${_home_dir}:rw" \
@@ -197,3 +204,7 @@ docker run --rm --interactive \
   "${gotopt2_container}" \
     bash -c "${_cmdline}"
 
+
+echo --- AT END  : "${_only_dir}"
+ls -la "${_only_dir}" || echo "nothing?"
+echo ---
