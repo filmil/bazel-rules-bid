@@ -152,12 +152,11 @@ if [[ "$gotopt2_scratch_dir" != "" ]]; then
   _only_dir="${_stripped_pwd}/${_stripped_scratch%:*}"
   # This apparently happens once in a while. Why? I don't know.
   if [[ ! -d "${_only_dir}" ]]; then
-    echo DOES NOT EXIST: "${_only_dir}"
-    exit 1
+    mkdir -p "${_only_dir}"
   fi
-  echo --- AT BEGIN: "${_only_dir}"
-  ls -la "${_only_dir}" || echo "nothing?"
-  echo ---
+  #echo --- AT BEGIN: "${_only_dir}"
+  #ls -la "${_only_dir}" || echo "nothing?"
+  #echo ---
 fi
 
 _source_dir=""
@@ -209,7 +208,6 @@ docker run --rm --interactive \
   "${gotopt2_container}" \
     bash -c "${_cmdline}"
 
-
-echo --- AT END  : "${_only_dir}"
-ls -la "${_only_dir}" || echo "nothing?"
-echo ---
+#echo --- AT END  : "${_only_dir}"
+#ls -la "${_only_dir}" || echo "nothing?"
+#echo ---
