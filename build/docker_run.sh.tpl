@@ -150,6 +150,11 @@ if [[ "$gotopt2_scratch_dir" != "" ]]; then
   _stripped_scratch="${gotopt2_scratch_dir#/}" # Strips heading slash.
   _scratch_dir="-v ${_stripped_pwd}/${_stripped_scratch}:rw"
   _only_dir="${_stripped_pwd}/${_stripped_scratch%:*}"
+  # This apparently happens once in a while. Why? I don't know.
+  if [[ ! -d "${_only_dir}" ]]; then
+    echo DOES NOT EXIST: "${_only_dir}"
+    exit 1
+  fi
   echo --- AT BEGIN: "${_only_dir}"
   ls -la "${_only_dir}" || echo "nothing?"
   echo ---
