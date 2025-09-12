@@ -1,0 +1,17 @@
+{
+  "homepage": "https://hdlfactory.com/post/2025/02/11/bazel-rules-for-build-in-docker-or-bid/",
+  "maintainers": [
+    {
+      "name": "Filip Filmar",
+      "email": "246576+filmil@users.noreply.github.com",
+      "github": "filmil",
+      "github_user_id": 246576
+    }
+  ],
+  "repository": [
+    "github:filmil/bazel-rules-bid"
+  ],
+  "versions": [
+  ],
+  "yanked_versions": {}
+}
