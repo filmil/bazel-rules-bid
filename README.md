@@ -32,25 +32,16 @@ invoke that container in build steps.
 
 ## How to use bid?
 
-Declare it in your `WORKSPACE` file.
+Declare it in your `MODULE.bazel` file.
 
-Ensure your `WORKSPACE` file has:
-
-```
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
-```
-
-Then append the following:
-
-```
-git_repository(
+```python
+bazel_dep(
     name = "bazel_rules_bid",
-    remote = "https://github.com/filmil/bazel-rules-bid.git",
-    commit = "04b599ec790fe4572dfb851e145c791cb5022c15",
-    shallow_since = "1676537869 -0800"
+    version = "0.3.0", # Select a version.
 )
-load("@bazel_rules_bid//build:repositories.bzl", "bazel_bid_repositories")
-bazel_bid_repositories()
+bazel_rules_bid_extension = use_extension(
+    "@bazel_rules_bid//:extensions.bzl", "bazel_rules_bid_extension")
+use_repo(bazel_rules_bid_extension, "gotopt2")
 ```
 
 See the [example][ex] in Bazel-ebook on how to use it then.
