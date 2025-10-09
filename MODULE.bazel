@@ -3,6 +3,9 @@ module(
     version = "0.3.0",
 )
 
+
+bazel_dep(name = "rules_shell", version = "0.6.0")
+
 bazel_rules_bid_extension = use_extension(
     "@bazel_rules_bid//:extensions.bzl", "bazel_rules_bid_extension")
 use_repo(bazel_rules_bid_extension, "gotopt2")
