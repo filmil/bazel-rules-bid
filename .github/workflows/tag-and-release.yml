@@ -15,6 +15,8 @@ on:
 jobs:
   tag:
     runs-on: ubuntu-latest
+    outputs:
+      tag_name: ${{ steps.tag_version.outputs.new_tag }}
     steps:
       - name: Setup bazel
         uses: bazel-contrib/setup-bazel@0.15.0
@@ -57,4 +59,12 @@ jobs:
           tag: ${{ steps.tag_version.outputs.new_tag }}
           allowUpdates: true
           artifacts: "${{ env.REPO_NAME }}-${{ env.VERSION }}.zip"
+
+  publish:
+    needs: tag
+    uses: ./.github/workflows/publish.yml
+    with:
+      tag_name: ${{ needs.tag.outputs.tag_name }}
+    secrets:
+      BCR_PUBLISH_TOKEN: ${{ secrets.BCR_PUBLISH_TOKEN }}
 
