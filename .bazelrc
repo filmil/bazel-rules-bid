@@ -1,9 +1,7 @@
+# Add project-wide settings below.
+common --registry=https://raw.githubusercontent.com/filmil/bazel-registry/main
+common --registry=https://bcr.bazel.build
+
 # Add your local user settings to file `user.bazelrc`
 try-import %workspace%/user.bazelrc
-
-# Add project-wide settings below.
-build --registry=https://raw.githubusercontent.com/filmil/bazel-registry/main \
-      --registry=https://bcr.bazel.build
-mod --registry=https://raw.githubusercontent.com/filmil/bazel-registry/main \
-      --registry=https://bcr.bazel.build
 
