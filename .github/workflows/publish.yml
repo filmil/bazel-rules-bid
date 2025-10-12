@@ -3,6 +3,10 @@ name: Publish to my Bazel registry
 
 on:
   workflow_call:
+    secrets:
+      BCR_PUBLISH_TOKEN:
+        required: false
+        description: 'Optional token for BCR publishing.'
     inputs:
       tag_name:
         required: true
