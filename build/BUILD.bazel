@@ -2,10 +2,11 @@
 #
 # This file has been licensed under Apache 2.0 license.  Please see the LICENSE
 # file at the root of the repository.
+load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
 
 sh_binary(
   name = "docker_run",
-  srcs = [":gen_docker_run"],
+  srcs = ["docker_run.sh"],
   visibility = ["//visibility:public"],
   data = [
     "@gotopt2//:bin",
@@ -13,16 +14,3 @@ sh_binary(
   ],
 )
 
-genrule(
-  name = "gen_docker_run",
-  srcs = [ "docker_run.sh.tpl" ],
-  outs = [ "docker_run.sh" ],
-  cmd = """
-    sed --expression='s|::GOTOPT2_BINARY::|$(location @gotopt2//:bin)|g' \
-        > "$(@)" \
-        < "$(location docker_run.sh.tpl)"
-  """,
-  tools = [
-    "@gotopt2//:bin",
-  ]
-)
