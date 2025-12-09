@@ -2,8 +2,8 @@
 try-import %workspace%/user.bazelrc
 
 # Add project-wide settings below.
-build --registry=https://raw.githubusercontent.com/filmil/bazel-central-registry/dev \
+build --registry=https://raw.githubusercontent.com/filmil/bazel-registry/main \
       --registry=https://bcr.bazel.build
-mod --registry=https://raw.githubusercontent.com/filmil/bazel-central-registry/dev \
+mod --registry=https://raw.githubusercontent.com/filmil/bazel-registry/main \
       --registry=https://bcr.bazel.build
 

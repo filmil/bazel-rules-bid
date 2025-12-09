@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 # Copyright (C) 2020 Google Inc.
 #
 # This file has been licensed under Apache 2.0 license.  Please see the LICENSE
@@ -36,21 +36,27 @@ else
   exit 1
 fi
 # --- end runfiles.bash initialization ---
+echo runfiles: ${RUNFILES_DIR}
 
-# This is somewhat of a hack: we're trying to find the runfiles path of a binary
-# whose location is with respect to its position in the dependency repo. So,
-# strip 'external/' where it applies.
-_binary_path="::GOTOPT2_BINARY::"
-if [[ "${_binary_path}" == "external/"* ]]; then
-    _binary_path="${_binary_path#external/}"
+echo 1: $(rlocation gotopt2+/tools/gotopt2/gotopt2)
+echo 2: $(rlocation rules_multitool++multitool+multitool/tools/gotopt2/gotopt2)
+
+_gotopt2_binary="$(rlocation rules_multitool++multitool+multitool/tools/gotopt2/gotopt2)"
+if [[ "${_gotopt2_binary}" == "" ]]; then
+
+  _gotopt2_binary="$(rlocation rules_multitool~~multitool~multitool/tools/gotopt2/gotopt2)"
 fi
-readonly _gotopt2_binary="$(rlocation ${_binary_path})"
+if [[ ! -f "${_gotopt2_binary}" ]]; then
+  echo gotopt2 binary not found
+  exit 240
+fi
 
 
 # Exit quickly if the binary isn't found. This may happen if the binary location
 # moves internally in bazel.
-if [[ ! -x "${_gotopt2_binary}" ]]; then
-  echo "gotopt2 binary not found"
+if [[ ! -f "${_gotopt2_binary}" ]]; then
+  echo "gotopt2 binary not found at: ${_binary_path}"
+  ls ${_binary_path}
   exit 240
 fi
 
@@ -211,3 +217,5 @@ docker run --rm --interactive \
 #echo --- AT END  : "${_only_dir}"
 #ls -la "${_only_dir}" || echo "nothing?"
 #echo ---
+
+# vim: filetype=bash
