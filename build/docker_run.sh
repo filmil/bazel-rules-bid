@@ -36,10 +36,10 @@ else
   exit 1
 fi
 # --- end runfiles.bash initialization ---
-echo runfiles: ${RUNFILES_DIR}
+#echo runfiles: ${RUNFILES_DIR}
 
-echo 1: $(rlocation gotopt2+/tools/gotopt2/gotopt2)
-echo 2: $(rlocation rules_multitool++multitool+multitool/tools/gotopt2/gotopt2)
+#echo 1: $(rlocation gotopt2+/tools/gotopt2/gotopt2)
+#echo 2: $(rlocation rules_multitool++multitool+multitool/tools/gotopt2/gotopt2)
 
 _gotopt2_binary="$(rlocation rules_multitool++multitool+multitool/tools/gotopt2/gotopt2)"
 if [[ "${_gotopt2_binary}" == "" ]]; then
