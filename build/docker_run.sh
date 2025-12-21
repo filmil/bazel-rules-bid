@@ -92,7 +92,7 @@ flags:
 - name: "src-mount"
   type: string
   default: "/src"
-  help: "The writable work directory to mount"
+  help: "OBSOLETE: The writable work directory to mount"
 - name: "src-dir-hint"
   type: string
   help: "this should be a full path, relative to execroot, for a file in the source dir."
@@ -119,11 +119,6 @@ fi
 # directories are, so that they could be made available to the running
 # container command.
 
-# Try to follow the symlinks of the input file as far as we can.  Once we're
-# done, the directory that we're left with is the directory we need to mount
-# in, i.e. the actual path to the source directory.
-readonly _real_source_dir="$(dirname $(readlink -m ${gotopt2_dir_reference}))"
-
 # This is the output directory (needs to be mounted writable).
 readonly _output_dir="$(realpath $(dirname ${gotopt2_dir_reference}))"
 
@@ -147,30 +142,12 @@ readonly _gid="$(id -g)"
 
 readonly _cmdline="${gotopt2_args__[@]}"
 
-_reference_dir="${PWD}"
-if [[ "${gotopt2_cd_to_dir_reference}" == "true" ]]; then
-  _reference_dir="${_output_dir}"
-fi
-
 _scratch_dir=""
-_only_dir=""
 if [[ "$gotopt2_scratch_dir" != "" ]]; then
   _stripped_pwd="${PWD%/}" # Strip trailing slash.
   _stripped_scratch="${gotopt2_scratch_dir#/}" # Strips heading slash.
   _scratch_dir="-v ${_stripped_pwd}/${_stripped_scratch}:rw"
   _only_dir="${_stripped_pwd}/${_stripped_scratch%:*}"
-  # This apparently happens once in a while. Why? I don't know.
-  if [[ ! -d "${_only_dir}" ]]; then
-    mkdir -p "${_only_dir}"
-  fi
-  #echo --- AT BEGIN: "${_only_dir}"
-  #ls -la "${_only_dir}" || echo "nothing?"
-  #echo ---
-fi
-
-_source_dir=""
-if [[ "$gotopt2_source_dir" != "" ]]; then
-  _source_dir="-v ${gotopt2_source_dir}:${gotopt2_source_dir}"
 fi
 
 _envs=()
@@ -225,7 +202,6 @@ docker run --rm --interactive \
   -v "${_tools_dir}:/tools:ro" \
   ${_mounts[*]} \
   ${_envs[*]} \
-  ${_source_dir} \
   ${_scratch_dir} \
   -w "${_run_dir}" \
   ${_freeargs[*]} \
