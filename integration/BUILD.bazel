@@ -1,0 +1,21 @@
+load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
+load("@rules_shell//shell:sh_test.bzl", "sh_test")
+load(":genfile.bzl", "genfile")
+
+sh_binary(
+    name = "runme",
+    srcs = [
+        "runme.bash",
+    ],
+)
+
+sh_test(
+    name = "test",
+    srcs = [
+        "test.bash",
+    ],
+)
+
+genfile(
+    name = "generate",
+)
