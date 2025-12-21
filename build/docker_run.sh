@@ -200,14 +200,24 @@ if [[ "${#gotopt2_tools__list[@]}" != 0 ]]; then
   cp ${gotopt2_tools__list[@]} "${_tools_dir}"
 fi
 
-set -x
-
 if [[ "${gotopt2_src_dir_hint}" != "" ]]; then
   readonly _src_dir="$(resolve_workspace ${gotopt2_src_dir_hint})"
   if [[ "${_src_dir}" != "" ]]; then
     _freeargs+=("-v" "${_src_dir}:${_src_dir}:ro")
   fi
 fi
+
+_f="bazel-out/k8-opt-exec-ST-d57f47055a04/bin/runme"
+log::warn "f0: ${_f})"
+ls -l "${_f}" | log::prefix "[dbg] "
+
+_f="$(readlink ${_f})"
+log::warn "f0: ${_f})"
+ls -l "${_f}" | log::prefix "[dbg] "
+
+_f="$(readlink -m ${_f})"
+log::warn "f0: ${_f})"
+ls -l "${_f}" | log::prefix "[dbg] "
 
 
 # XXX: Does this slow things down too much?
