@@ -218,7 +218,6 @@ fi
 
 # XXX: Does this slow things down too much?
 sync
-set -x
 docker run --rm --interactive \
   -u "${_uid}:${_gid}" \
   -v "${_output_root}:${_output_root}:rw" \
