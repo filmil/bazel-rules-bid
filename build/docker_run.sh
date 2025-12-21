@@ -42,6 +42,7 @@ set -eo pipefail
 
 source "$(rlocation fshlib/log.bash)"
 source "$(rlocation bazel_rules_bid/build/resolve_gotopt.bash)"
+source "$(rlocation bazel_rules_bid/build/resolve_workspace.bash)"
 
 if [[ "${DEBUG}" == "true" ]]; then
   env | log::prefix "[env] "
@@ -92,6 +93,9 @@ flags:
   type: string
   default: "/src"
   help: "The writable work directory to mount"
+- name: "src-dir-hint"
+  type: string
+  help: "this should be a full path, relative to execroot, for a file in the source dir."
 EOF
 )
 if [[ "$?" == "11" ]]; then
@@ -195,6 +199,16 @@ readonly _tools_dir="$(mktemp -d --tmpdir=${_output_dir} tools-XXXXXX)"
 if [[ "${#gotopt2_tools__list[@]}" != 0 ]]; then
   cp ${gotopt2_tools__list[@]} "${_tools_dir}"
 fi
+
+set -x
+
+if [[ "${gotopt2_src_dir_hint}" != "" ]]; then
+  readonly _src_dir="$(resolve_workspace ${gotopt2_src_dir_hint})"
+  if [[ "${_src_dir}" != "" ]]; then
+    _freeargs+=("-v" "${_src_dir}:${_src_dir}:ro")
+  fi
+fi
+
 
 # XXX: Does this slow things down too much?
 sync

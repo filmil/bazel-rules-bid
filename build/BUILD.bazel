@@ -27,5 +27,6 @@ sh_library(
   name = "resolve",
   srcs = [
     "resolve_gotopt.bash",
+    "resolve_workspace.bash",
   ],
 )
