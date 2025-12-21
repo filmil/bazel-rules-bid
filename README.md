@@ -1,7 +1,6 @@
 # Bazel rules for "build-in-docker" (or "bid")
 
 [![Build](https://github.com/filmil/bazel-rules-bid/actions/workflows/build.yml/badge.svg)](https://github.com/filmil/bazel-rules-bid/actions/workflows/build.yml)
-[![Publish](https://github.com/filmil/bazel-rules-bid/actions/workflows/publish.yml/badge.svg)](https://github.com/filmil/bazel-rules-bid/actions/workflows/publish.yml)
 [![Tag and release](https://github.com/filmil/bazel-rules-bid/actions/workflows/tag-and-release.yml/badge.svg)](https://github.com/filmil/bazel-rules-bid/actions/workflows/tag-and-release.yml)
 
 
