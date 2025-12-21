@@ -19,5 +19,8 @@ jobs:
         uses: actions/checkout@v3
       - name: Build
         run: "bazel build //..."
-      - name: Quick check
-        run: "bazel run //build:docker_run -- --help"
+      - name: Test
+        run: "bazel test //..."
+      - name: "Integration test"
+        run: "cd integration && bazel build //..."
+

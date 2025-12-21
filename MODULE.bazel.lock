@@ -210,6 +210,8 @@
     "https://raw.githubusercontent.com/filmil/bazel-registry/main/modules/buildifier_prebuilt/6.4.0/MODULE.bazel": "not found",
     "https://raw.githubusercontent.com/filmil/bazel-registry/main/modules/buildifier_prebuilt/7.3.1/MODULE.bazel": "not found",
     "https://raw.githubusercontent.com/filmil/bazel-registry/main/modules/buildozer/7.1.2/MODULE.bazel": "not found",
+    "https://raw.githubusercontent.com/filmil/bazel-registry/main/modules/fshlib/0.1.6/MODULE.bazel": "d6100a1778f8f17bc20f405f6b5eb653d8b5fff8c2b2b5bd4af0f928db6ea185",
+    "https://raw.githubusercontent.com/filmil/bazel-registry/main/modules/fshlib/0.1.6/source.json": "a1f559ec567c52a15380bfca99cce3073df3a4d6a6a4a1eb18d8d6fffbeb898f",
     "https://raw.githubusercontent.com/filmil/bazel-registry/main/modules/gazelle/0.32.0/MODULE.bazel": "not found",
     "https://raw.githubusercontent.com/filmil/bazel-registry/main/modules/gazelle/0.33.0/MODULE.bazel": "not found",
     "https://raw.githubusercontent.com/filmil/bazel-registry/main/modules/gazelle/0.34.0/MODULE.bazel": "not found",
