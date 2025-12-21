@@ -21,6 +21,8 @@ jobs:
           repository-cache: true
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Bazel config
+        run: "bazel info"
       - name: Build
         run: "bazel build //..."
       - name: Test

@@ -207,18 +207,14 @@ if [[ "${gotopt2_src_dir_hint}" != "" ]]; then
   fi
 fi
 
-_f="bazel-out/k8-opt-exec-ST-d57f47055a04/bin/runme"
-log::warn "f0: ${_f})"
-ls -l "${_f}" | log::prefix "[dbg] "
-
-_f="$(readlink ${_f})"
-log::warn "f0: ${_f})"
-ls -l "${_f}" | log::prefix "[dbg] "
-
-_f="$(readlink -m ${_f})"
-log::warn "f0: ${_f})"
-ls -l "${_f}" | log::prefix "[dbg] "
-
+# This is a special concession to the new bazel runner.
+readonly _github_runner_special="/home/runner/.bazel"
+if [[ -d "${_github_runner_special}" ]]; then
+  _freeargs+=(
+    "-v"
+    "${_github_runner_special}:${_github_runner_special}:rw"
+  )
+fi
 
 # XXX: Does this slow things down too much?
 sync
@@ -226,7 +222,7 @@ set -x
 docker run --rm --interactive \
   -u "${_uid}:${_gid}" \
   -v "${_output_root}:${_output_root}:rw" \
-  -v "${_home_dir}:${_home_dir}:ro" \
+  -v "${_home_dir}:${_home_dir}:rw" \
   -v "${_tools_dir}:/tools:ro" \
   ${_mounts[*]} \
   ${_envs[*]} \
