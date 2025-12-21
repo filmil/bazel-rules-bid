@@ -3,14 +3,29 @@
 # This file has been licensed under Apache 2.0 license.  Please see the LICENSE
 # file at the root of the repository.
 load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
+load("@rules_shell//shell:sh_library.bzl", "sh_library")
+
+package(
+  default_visibility = [ "//visibility:public" ],
+)
 
 sh_binary(
   name = "docker_run",
   srcs = ["docker_run.sh"],
+  deps = [
+    ":resolve",
+  ],
   visibility = ["//visibility:public"],
   data = [
     "@gotopt2//:bin",
     "@bazel_tools//tools/bash/runfiles",
+    "@fshlib//:log",
   ],
 )
 
+sh_library(
+  name = "resolve",
+  srcs = [
+    "resolve_gotopt.bash",
+  ],
+)
