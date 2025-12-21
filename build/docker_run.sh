@@ -1,7 +1,6 @@
 #! /usr/bin/env bash
 # Copyright (C) 2020 Google Inc.
-#
-env
+
 # This file has been licensed under Apache 2.0 license.  Please see the LICENSE
 # file at the root of the repository.
 #
@@ -39,26 +38,23 @@ else
   exit 1
 fi
 # --- end runfiles.bash initialization ---
-#echo runfiles: ${RUNFILES_DIR}
+set -eo pipefail
 
-#echo 1: $(rlocation gotopt2+/tools/gotopt2/gotopt2)
-#echo 2: $(rlocation rules_multitool++multitool+multitool/tools/gotopt2/gotopt2)
+source "$(rlocation fshlib/log.bash)"
+source "$(rlocation bazel_rules_bid/build/resolve_gotopt.bash)"
 
-_gotopt2_binary="$(rlocation rules_multitool++multitool+multitool/tools/gotopt2/gotopt2)"
-if [[ "${_gotopt2_binary}" == "" ]]; then
-
-  _gotopt2_binary="$(rlocation rules_multitool~~multitool~multitool/tools/gotopt2/gotopt2)"
+if [[ "${DEBUG}" == "true" ]]; then
+  env | log::prefix "[env] "
+  set -x
 fi
-if [[ ! -f "${_gotopt2_binary}" ]]; then
-  echo gotopt2 binary not found
-  exit 240
-fi
+
+readonly _gotopt2_binary="$(resolve_gotopt2)"
 
 
 # Exit quickly if the binary isn't found. This may happen if the binary location
 # moves internally in bazel.
 if [[ ! -f "${_gotopt2_binary}" ]]; then
-  echo "gotopt2 binary not found at: ${_binary_path}"
+  log::error "gotopt2 binary not found at: ${_binary_path}"
   ls ${_binary_path}
   exit 240
 fi
@@ -107,15 +103,13 @@ fi
 eval "${GOTOPT2_OUTPUT}"
 
 if [[ ${gotopt2_container} == "" ]]; then
-  echo "Flag --container=... is required"
+  log::error "Flag --container=... is required"
   exit 2
 fi
 if [[ ${gotopt2_dir_reference} == "" ]]; then
-  echo "Flag --dir-reference=... is required"
+  log::error "Flag --dir-reference=... is required"
   exit 3
 fi
-
-set -x
 
 # These tricks are used to figure out what the real source and build root
 # directories are, so that they could be made available to the running
@@ -129,14 +123,9 @@ readonly _real_source_dir="$(dirname $(readlink -m ${gotopt2_dir_reference}))"
 # This is the output directory (needs to be mounted writable).
 readonly _output_dir="$(realpath $(dirname ${gotopt2_dir_reference}))"
 
-# Figure out the bazel build root: using the knowledge that the build root
-# seems to have the string "/_bazel_" at the beginning of the directory that
-# is the user build root directory.
 readonly _build_root="${PWD%%/_bazel_*}"
 readonly _run_dir="${PWD}"
-
 readonly _cache_dir="${PWD%%/bazel/_bazel_*}"
-echo YYY: "${_user_output_base}"
 readonly _output_root="${_cache_dir}/bazel"
 
 ### HACK! HACK! HACK!
