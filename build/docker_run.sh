@@ -1,8 +1,11 @@
 #! /usr/bin/env bash
 # Copyright (C) 2020 Google Inc.
 #
+env
 # This file has been licensed under Apache 2.0 license.  Please see the LICENSE
 # file at the root of the repository.
+#
+#
 
 # Runs a command line in the docker container.
 #
@@ -112,6 +115,8 @@ if [[ ${gotopt2_dir_reference} == "" ]]; then
   exit 3
 fi
 
+set -x
+
 # These tricks are used to figure out what the real source and build root
 # directories are, so that they could be made available to the running
 # container command.
@@ -128,13 +133,18 @@ readonly _output_dir="$(realpath $(dirname ${gotopt2_dir_reference}))"
 # seems to have the string "/_bazel_" at the beginning of the directory that
 # is the user build root directory.
 readonly _build_root="${PWD%%/_bazel_*}"
+readonly _run_dir="${PWD}"
+
+readonly _cache_dir="${PWD%%/bazel/_bazel_*}"
+echo YYY: "${_user_output_base}"
+readonly _output_root="${_cache_dir}/bazel"
 
 ### HACK! HACK! HACK!
 # User's home dir is usually here somewhere. We're assuming that the source
 # code is checked out here.  If not, there will be... trouble.
 #
 # I think I can fix this, but it will take a bit of time.
-readonly _home_dir="${_build_root%%.cache/*}"
+readonly _home_dir="${_build_root%%/.cache/*}"
 
 # Required, so that the docker command runs as your UID:GID, so that the output
 # file is created with your permissions.  Otherwise it will get created as
@@ -201,21 +211,16 @@ fi
 sync
 docker run --rm --interactive \
   -u "${_uid}:${_gid}" \
-  -v "${_home_dir}:${_home_dir}:rw" \
-  -v "${_real_source_dir}:${_real_source_dir}:ro" \
-  -v "${_reference_dir}:${gotopt2_src_mount}" \
+  -v "${_output_root}:${_output_root}:rw" \
+  -v "${_home_dir}:${_home_dir}:ro" \
   -v "${_tools_dir}:/tools:ro" \
   ${_mounts[*]} \
   ${_envs[*]} \
   ${_source_dir} \
   ${_scratch_dir} \
-  -w "${gotopt2_src_mount}" \
+  -w "${_run_dir}" \
   ${_freeargs[*]} \
   "${gotopt2_container}" \
     bash -c "${_cmdline}"
-
-#echo --- AT END  : "${_only_dir}"
-#ls -la "${_only_dir}" || echo "nothing?"
-#echo ---
 
 # vim: filetype=bash
