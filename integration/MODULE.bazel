@@ -14,3 +14,10 @@ local_path_override(
 )
 
 
+
+ensure_container = use_repo_rule("@bazel_rules_bid//:ensure_container.bzl", "ensure_container")
+ensure_container(
+    name = "local_image_check",
+    image = "my-image:latest",
+    uri = "magnet:?xt=urn:btih:f2abc8a61ac867192fceae602366fe6eaf5cda47&dn=tremc",
+)
