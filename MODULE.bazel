@@ -1,5 +1,5 @@
 module(
-    name = "bazel_rules_bid",
+    name = "rules_bid",
     version = "0.0.0",
     bazel_compatibility = [">=8.0.0"],
 )

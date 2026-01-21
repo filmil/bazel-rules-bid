@@ -1,4 +1,4 @@
-load("@bazel_rules_bid//build:rules.bzl", "run_docker_cmd")
+load("@rules_bid//build:rules.bzl", "run_docker_cmd")
 
 _CONTAINER = "ubuntu:22.04"
 
@@ -54,7 +54,7 @@ genfile = rule(
             cfg = "host",
         ),
         "_docker_run": attr.label(
-            default = Label("@bazel_rules_bid//build:docker_run"),
+            default = Label("@rules_bid//build:docker_run"),
             executable = True,
             cfg = "host",
         ),
