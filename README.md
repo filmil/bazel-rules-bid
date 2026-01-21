@@ -37,12 +37,12 @@ Declare it in your `MODULE.bazel` file.
 
 ```python
 bazel_dep(
-    name = "bazel_rules_bid",
+    name = "rules_bid",
     version = "0.3.0", # Select a version.
 )
-bazel_rules_bid_extension = use_extension(
-    "@bazel_rules_bid//:extensions.bzl", "bazel_rules_bid_extension")
-use_repo(bazel_rules_bid_extension, "gotopt2")
+rules_bid_extension = use_extension(
+    "@rules_bid//:extensions.bzl", "rules_bid_extension")
+use_repo(rules_bid_extension, "gotopt2")
 ```
 
 See the [example][ex] in Bazel-ebook on how to use it then.

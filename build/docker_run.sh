@@ -41,8 +41,8 @@ fi
 set -eo pipefail
 
 source "$(rlocation fshlib/log.bash)"
-source "$(rlocation bazel_rules_bid/build/resolve_gotopt.bash)"
-source "$(rlocation bazel_rules_bid/build/resolve_workspace.bash)"
+source "$(rlocation rules_bid/build/resolve_gotopt.bash)"
+source "$(rlocation rules_bid/build/resolve_workspace.bash)"
 
 if [[ "${DEBUG}" == "true" ]]; then
   env | log::prefix "[env] "
