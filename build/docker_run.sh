@@ -148,6 +148,8 @@ if [[ "$gotopt2_scratch_dir" != "" ]]; then
   _stripped_scratch="${gotopt2_scratch_dir#/}" # Strips heading slash.
   _scratch_dir="-v ${_stripped_pwd}/${_stripped_scratch}:rw"
   _only_dir="${_stripped_pwd}/${_stripped_scratch%:*}"
+  # Sometimes scratch_dir gets created with root ownership (?)
+  chmod a+w "${_only_dir}" || true
 fi
 
 _envs=()
