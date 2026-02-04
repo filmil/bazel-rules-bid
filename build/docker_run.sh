@@ -142,6 +142,7 @@ readonly _gid="$(id -g)"
 
 readonly _cmdline="${gotopt2_args__[@]}"
 
+_only_dir=""
 _scratch_dir=""
 if [[ "$gotopt2_scratch_dir" != "" ]]; then
   _stripped_pwd="${PWD%/}" # Strip trailing slash.
@@ -209,5 +210,10 @@ docker run --rm --interactive \
   ${_freeargs[*]} \
   "${gotopt2_container}" \
     bash -c "${_cmdline}"
+
+if [[ "${_only_dir}" != "" ]]; then
+  log::debug "Setting ownership: ${_only_dir}"
+  chmod a+w "${_only_dir}"
+fi
 
 # vim: filetype=bash
