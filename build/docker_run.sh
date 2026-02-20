@@ -150,6 +150,7 @@ if [[ "$gotopt2_scratch_dir" != "" ]]; then
   _scratch_dir="-v ${_stripped_pwd}/${_stripped_scratch}:rw"
   _only_dir="${_stripped_pwd}/${_stripped_scratch%:*}"
   # Sometimes scratch_dir gets created with root ownership (?)
+  log::debug "Creating dir: ${_only_dir}"
   mkdir -p "${_only_dir}" || xargs log::error
   chmod a+w "${_only_dir}" || true
 fi
