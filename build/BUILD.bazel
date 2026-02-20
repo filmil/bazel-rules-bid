@@ -1,3 +1,5 @@
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+
 # Copyright (C) 2020 Google Inc.
 #
 # This file has been licensed under Apache 2.0 license.  Please see the LICENSE
@@ -6,27 +8,32 @@ load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
 load("@rules_shell//shell:sh_library.bzl", "sh_library")
 
 package(
-  default_visibility = [ "//visibility:public" ],
+    default_visibility = ["//visibility:public"],
 )
 
 sh_binary(
-  name = "docker_run",
-  srcs = ["docker_run.sh"],
-  deps = [
-    ":resolve",
-  ],
-  data = [
-    "@bazel_tools//tools/bash/runfiles",
-    "@fshlib//:log",
-    "@multitool//tools/gotopt2",
-  ],
+    name = "docker_run",
+    srcs = ["docker_run.sh"],
+    data = [
+        "@bazel_tools//tools/bash/runfiles",
+        "@fshlib//:log",
+        "@multitool//tools/gotopt2",
+    ],
+    deps = [
+        ":resolve",
+    ],
 )
 
 sh_library(
-  name = "resolve",
-  srcs = [
-    "resolve_gotopt.bash",
-    "resolve_workspace.bash",
-    "@multitool//tools/gotopt2",
-  ],
+    name = "resolve",
+    srcs = [
+        "resolve_gotopt.bash",
+        "resolve_workspace.bash",
+        "@multitool//tools/gotopt2",
+    ],
+)
+
+bzl_library(
+    name = "rules",
+    srcs = ["rules.bzl"],
 )
