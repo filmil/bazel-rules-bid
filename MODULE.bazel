@@ -6,7 +6,7 @@ module(
 
 bazel_dep(name = "aspect_bazel_lib", version = "2.21.1")
 bazel_dep(name = "bazel_lib", version = "3.0.0", dev_dependency = True)
-bazel_dep(name = "bazel_skylib", version = "1.8.2", dev_dependency = True)
+bazel_dep(name = "bazel_skylib", version = "1.8.2")
 bazel_dep(name = "bazel_skylib_gazelle_plugin", version = "1.8.2", dev_dependency = True)
 bazel_dep(name = "buildifier_prebuilt", version = "8.2.0.2")
 bazel_dep(name = "fshlib", version = "0.2.0")
