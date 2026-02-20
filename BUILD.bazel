@@ -1,6 +1,28 @@
+#load("@bazel_lib//:bzl_library.bzl", "bzl_library")
+#load("@bazel_lib//lib:write_source_files.bzl", "write_source_files")
+load("@buildifier_prebuilt//:rules.bzl", "buildifier")
+load("@gazelle//:def.bzl", "DEFAULT_LANGUAGES", "gazelle", "gazelle_binary")
 load("@rules_shell//shell:sh_test.bzl", "sh_test")
+#load("@stardoc//stardoc:stardoc.bzl", "stardoc")
+
+gazelle(
+    name = "gazelle",
+    gazelle = ":gazelle_bin",
+)
+
+gazelle_binary(
+    name = "gazelle_bin",
+    languages = DEFAULT_LANGUAGES + [
+        "@bazel_skylib_gazelle_plugin//bzl",
+    ],
+)
+
+# bazel run //:buildifier
+buildifier(
+    name = "buildifier",
+)
 
 sh_test(
     name = "test",
-    srcs = [ "test.sh", ],
+    srcs = ["test.sh"],
 )
