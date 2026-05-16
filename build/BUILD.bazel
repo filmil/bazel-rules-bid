@@ -1,6 +1,7 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
 load("@rules_shell//shell:sh_library.bzl", "sh_library")
+load(":gotopt2.bzl", "gotopt2_generate_bash")
 
 # Copyright (C) 2020 Google Inc.
 #
@@ -11,12 +12,10 @@ package(
     default_visibility = ["//visibility:public"],
 )
 
-genrule(
+gotopt2_generate_bash(
     name = "docker_run_flags",
-    srcs = ["docker_run_flags.yaml"],
-    outs = ["docker_run_flags.bash"],
-    tools = ["@gotopt2//cmd/gotopt2-generator"],
-    cmd = "$(location @gotopt2//cmd/gotopt2-generator) < $< > $@",
+    src = "docker_run_flags.yaml",
+    out = "docker_run_flags.bash",
 )
 
 sh_binary(
