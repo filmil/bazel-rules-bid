@@ -26,10 +26,16 @@ var (
 )
 
 func resolveWorkspace(hint string) (string, error) {
-	curr, err := filepath.Abs(hint)
+	curr, err := filepath.EvalSymlinks(hint)
 	if err != nil {
-		return "", err
+		curr, err = filepath.Abs(hint)
+		if err != nil {
+			return "", err
+		}
+	} else {
+		curr, _ = filepath.Abs(curr)
 	}
+
 	if info, err := os.Stat(curr); err == nil && !info.IsDir() {
 		curr = filepath.Dir(curr)
 	}
