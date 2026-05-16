@@ -547,6 +547,105 @@
   },
   "selectedYankedVersions": {},
   "moduleExtensions": {
+    "@@bazel_bats+//:extensions.bzl%bazel_bats_deps": {
+      "general": {
+        "bzlTransitiveDigest": "8k3qxWBPs7QgdRBIhACFFD9n7jpG4EhniwBwRPpiUVs=",
+        "usagesDigest": "JS6a5kfxvNvrwYUl13Bam03M9UJ0ySxXCf5/pFXzxEw=",
+        "recordedInputs": [
+          "REPO_MAPPING:bazel_bats+,bazel_tools bazel_tools"
+        ],
+        "generatedRepoSpecs": {
+          "bats_core": {
+            "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_archive",
+            "attributes": {
+              "build_file_content": "\nload(\"@rules_shell//shell:sh_binary.bzl\", \"sh_binary\")\nload(\"@rules_shell//shell:sh_library.bzl\", \"sh_library\")\nload(\"@rules_shell//shell:sh_test.bzl\", \"sh_test\")\n\nsh_library(\n    name = \"bats_lib\",\n    srcs = glob([\"libexec/**\"]),\n)\n\nsh_binary(\n    name = \"bats\",\n    srcs = [\"bin/bats\"],\n    visibility = [\"//visibility:public\"],\n    deps = [\":bats_lib\"],\n)\n\nsh_library(\n    name = \"file_setup_teardown_lib\",\n    srcs = [\"test/file_setup_teardown.bats\"],\n    visibility = [\"//visibility:public\"],\n    data = glob([\"test/fixtures/file_setup_teardown/**\"]),\n)\n\nsh_library(\n    name = \"junit_formatter_lib\",\n    srcs = [\"test/junit-formatter.bats\"],\n    visibility = [\"//visibility:public\"],\n    data = glob([\"test/fixtures/junit-formatter/**\"]),\n)\n\nsh_library(\n    name = \"parallel_lib\",\n    srcs = [\"test/parallel.bats\"],\n    visibility = [\"//visibility:public\"],\n    data = glob([\n        \"test/concurrent-coordination.bash\",\n        \"test/fixtures/parallel/**\",\n    ]),\n)\n\nsh_library(\n    name = \"run_lib\",\n    srcs = [\"test/run.bats\"],\n    visibility = [\"//visibility:public\"],\n    data = glob([\"test/fixtures/run/**\"]),\n)\n\nsh_library(\n    name = \"suite_lib\",\n    srcs = [\"test/suite.bats\"],\n    visibility = [\"//visibility:public\"],\n    data = glob([\"test/fixtures/suite/**\"]),\n)\n\nsh_library(\n    name = \"test_helper\",\n    srcs = [\"test/test_helper.bash\"],\n    visibility = [\"//visibility:public\"],\n)\n\nsh_library(\n    name = \"trace_lib\",\n    srcs = [\"test/trace.bats\"],\n    visibility = [\"//visibility:public\"],\n    data = glob([\"test/fixtures/trace/**\"]),\n)\n\nexports_files(glob([\"test/*.bats\"]))\n",
+              "urls": [
+                "https://github.com/bats-core/bats-core/archive/refs/tags/v1.7.0.tar.gz"
+              ],
+              "strip_prefix": "bats-core-1.7.0",
+              "sha256": "ac70c2a153f108b1ac549c2eaa4154dea4a7c1cc421e3352f0ce6ea49435454e"
+            }
+          },
+          "bats_assert": {
+            "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_archive",
+            "attributes": {
+              "build_file_content": "\nfilegroup(\n    name = \"load_files\",\n    srcs = [\n        \"load.bash\",\n    ] + glob([\n        \"src/**/*.bash\",\n    ]),\n    visibility = [\"//visibility:public\"],\n)\n",
+              "sha256": "98ca3b685f8b8993e48ec057565e6e2abcc541034ed5b0e81f191505682037fd",
+              "strip_prefix": "bats-assert-2.1.0",
+              "urls": [
+                "https://github.com/bats-core/bats-assert/archive/refs/tags/v2.1.0.tar.gz"
+              ]
+            }
+          },
+          "bats_support": {
+            "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_archive",
+            "attributes": {
+              "build_file_content": "\nfilegroup(\n    name = \"load_files\",\n    srcs = [\n        \"load.bash\",\n    ] + glob([\n        \"src/**/*.bash\",\n    ]),\n    visibility = [\"//visibility:public\"],\n)\n",
+              "sha256": "7815237aafeb42ddcc1b8c698fc5808026d33317d8701d5ec2396e9634e2918f",
+              "strip_prefix": "bats-support-0.3.0",
+              "urls": [
+                "https://github.com/bats-core/bats-support/archive/refs/tags/v0.3.0.tar.gz"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "@@protobuf+//python/dist:system_python.bzl%system_python_extension": {
+      "general": {
+        "bzlTransitiveDigest": "qh0n9IrXU/xS94wxKQrG1J63zrLkA1Wy2Y3BQxptPcI=",
+        "usagesDigest": "AF5a9lHFrJtHw1GTt3jJOs7ZYl1+N2bkn1LbPFLoguA=",
+        "recordedInputs": [],
+        "generatedRepoSpecs": {
+          "system_python": {
+            "repoRuleId": "@@protobuf+//python/dist:system_python.bzl%system_python",
+            "attributes": {
+              "minimum_python_version": "3.9"
+            }
+          }
+        }
+      }
+    },
+    "@@pybind11_bazel+//:internal_configure.bzl%internal_configure_extension": {
+      "general": {
+        "bzlTransitiveDigest": "06cynZ1bCvvy8zHPrrDlXq+Z68xmjctHpfFxi+zEpJY=",
+        "usagesDigest": "D1r3lfzMuUBFxgG8V6o0bQTLMk3GkaGOaPzw53wrwyw=",
+        "recordedInputs": [
+          "REPO_MAPPING:pybind11_bazel+,bazel_tools bazel_tools",
+          "FILE:@@pybind11_bazel+//MODULE.bazel e6f4c20442eaa7c90d7190d8dc539d0ab422f95c65a57cc59562170c58ae3d34"
+        ],
+        "generatedRepoSpecs": {
+          "pybind11": {
+            "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_archive",
+            "attributes": {
+              "build_file": "@@pybind11_bazel+//:pybind11-BUILD.bazel",
+              "strip_prefix": "pybind11-2.12.0",
+              "urls": [
+                "https://github.com/pybind/pybind11/archive/v2.12.0.zip"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "@@rules_android+//bzlmod_extensions:apksig.bzl%apksig_extension": {
+      "general": {
+        "bzlTransitiveDigest": "KrgiB8lWxqVdbipL9YIYOuGjS80xlZIM/EBvUg8SVd0=",
+        "usagesDigest": "0FXD4PX+vQ/jVne2oV4v3Cw5Mc9DZQ4yTcoRkAjj/X4=",
+        "recordedInputs": [
+          "REPO_MAPPING:rules_android+,bazel_tools bazel_tools"
+        ],
+        "generatedRepoSpecs": {
+          "apksig": {
+            "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_archive",
+            "attributes": {
+              "url": "https://android.googlesource.com/platform/tools/apksig/+archive/24e3075e68ebe17c0b529bb24bfda819db5e2f3b.tar.gz",
+              "build_file": "@@rules_android+//bzlmod_extensions:apksig.BUILD"
+            }
+          }
+        }
+      }
+    },
     "@@rules_android+//rules/android_sdk_repository:rule.bzl%android_sdk_repository_extension": {
       "general": {
         "bzlTransitiveDigest": "NAy+0M15JNVEBb8Tny6t7j3lKqTnsAMjoBB6LJ+C370=",
