@@ -1,0 +1,35 @@
+flags:
+- name: "container"
+  type: string
+  help: "The name of the container to run"
+- name: "dir-reference"
+  type: string
+  help: "Some file in the current directory, e.g. the first file of inputs, for figuring out directories"
+- name: "cd-to-dir-reference"
+  type: bool
+  help: "If set, the script will CD into the reference directory before executing the command."
+- name: "scratch-dir"
+  type: string
+  help: "A docker expression host_dir:container_dir that will be mounted read-write"
+- name : "source-dir"
+  type: string
+  help: "The absolute path to the source dir, used for mounting source files."
+- name: "envs"
+  type: stringlist
+  help: "Comma-separated key value pairs for env variables."
+- name: "mounts"
+  type: stringlist
+  help: "Comma-separated key value pairs for mounts."
+- name: "tools"
+  type: stringlist
+  help: "Comma-separated list of tool files"
+- name: "freeargs"
+  type: stringlist
+  help: "Comma-separated list of free flags to apply"
+- name: "src-mount"
+  type: string
+  default: "/src"
+  help: "OBSOLETE: The writable work directory to mount"
+- name: "src-dir-hint"
+  type: string
+  help: "this should be a full path, relative to execroot, for a file in the source dir."

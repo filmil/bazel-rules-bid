@@ -41,70 +41,46 @@ fi
 set -eo pipefail
 
 source "$(rlocation fshlib/log.bash)"
-source "$(rlocation rules_bid/build/resolve_gotopt.bash)"
 source "$(rlocation rules_bid/build/resolve_workspace.bash)"
+source "$(rlocation rules_bid/build/docker_run_flags.bash)"
 
 if [[ "${DEBUG}" == "true" ]]; then
   env | log::prefix "[env] "
   set -x
 fi
 
-readonly _gotopt2_binary="$(resolve_gotopt2)"
+for arg in "$@"; do
+  if [[ "$arg" == "--help" ]]; then
+    # Print the help manually to bypass the exit 11
+    # from the generated parse_args function.
+    echo "Usage:" >&2
+    echo "  --container" >&2
+    echo "      The name of the container to run (default: \"\")" >&2
+    echo "  --dir-reference" >&2
+    echo "      Some file in the current directory, e.g. the first file of inputs, for figuring out directories (default: \"\")" >&2
+    echo "  --cd-to-dir-reference" >&2
+    echo "      If set, the script will CD into the reference directory before executing the command. (default: \"\")" >&2
+    echo "  --scratch-dir" >&2
+    echo "      A docker expression host_dir:container_dir that will be mounted read-write (default: \"\")" >&2
+    echo "  --source-dir" >&2
+    echo "      The absolute path to the source dir, used for mounting source files. (default: \"\")" >&2
+    echo "  --envs" >&2
+    echo "      Comma-separated key value pairs for env variables. (default: \"\")" >&2
+    echo "  --mounts" >&2
+    echo "      Comma-separated key value pairs for mounts. (default: \"\")" >&2
+    echo "  --tools" >&2
+    echo "      Comma-separated list of tool files (default: \"\")" >&2
+    echo "  --freeargs" >&2
+    echo "      Comma-separated list of free flags to apply (default: \"\")" >&2
+    echo "  --src-mount" >&2
+    echo "      OBSOLETE: The writable work directory to mount (default: \"/src\")" >&2
+    echo "  --src-dir-hint" >&2
+    echo "      this should be a full path, relative to execroot, for a file in the source dir. (default: \"\")" >&2
+    exit 0
+  fi
+done
 
-
-# Exit quickly if the binary isn't found. This may happen if the binary location
-# moves internally in bazel.
-if [[ ! -f "${_gotopt2_binary}" ]]; then
-  log::error "gotopt2 binary not found at: ${_binary_path}"
-  ls ${_binary_path}
-  exit 240
-fi
-
-GOTOPT2_OUTPUT=$($_gotopt2_binary "${@}" <<EOF
-flags:
-- name: "container"
-  type: string
-  help: "The name of the container to run"
-- name: "dir-reference"
-  type: string
-  help: "Some file in the current directory, e.g. the first file of inputs, for figuring out directories"
-- name: "cd-to-dir-reference"
-  type: bool
-  help: "If set, the script will CD into the reference directory before executing the command."
-- name: "scratch-dir"
-  type: string
-  help: "A docker expression host_dir:container_dir that will be mounted read-write"
-- name : "source-dir"
-  type: string
-  help: "The absolute path to the source dir, used for mounting source files."
-- name: "envs"
-  type: stringlist
-  help: "Comma-separated key value pairs for env variables."
-- name: "mounts"
-  type: stringlist
-  help: "Comma-separated key value pairs for mounts."
-- name: "tools"
-  type: stringlist
-  help: "Comma-separated list of tool files"
-- name: "freeargs"
-  type: stringlist
-  help: "Comma-separated list of free flags to apply"
-- name: "src-mount"
-  type: string
-  default: "/src"
-  help: "OBSOLETE: The writable work directory to mount"
-- name: "src-dir-hint"
-  type: string
-  help: "this should be a full path, relative to execroot, for a file in the source dir."
-EOF
-)
-if [[ "$?" == "11" ]]; then
-  # When --help option is used, gotopt2 exits with code 11.
-  exit 0
-fi
-
-# Evaluate the output of the call to gotopt2, shell vars assignment is here.
-eval "${GOTOPT2_OUTPUT}"
+parse_args "${@}"
 
 if [[ ${gotopt2_container} == "" ]]; then
   log::error "Flag --container=... is required"
