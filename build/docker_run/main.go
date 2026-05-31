@@ -140,7 +140,7 @@ func main() {
 		}
 		os.MkdirAll(hostDir, 0777)
 		os.Chmod(hostDir, 0777)
-		dockerArgs = append(dockerArgs, "-v", fmt.Sprintf("%s:rw", *scratchDir))
+		dockerArgs = append(dockerArgs, "-v", fmt.Sprintf("%s:%s:rw", hostDir, strings.Split(*scratchDir, ":")[1]))
 	}
 
 	if *freeargs != "" {
