@@ -3,9 +3,16 @@ module(
     version = "0.0.0",
 )
 
+bazel_dep(name = "rules_android", version = "0.7.2")
+bazel_dep(name = "rules_cc", version = "0.2.18")
 bazel_dep(name = "rules_shell", version = "0.8.0")
 bazel_dep(name = "rules_bid", version = "0.0.0")
 local_path_override(
     module_name = "rules_bid",
     path = "../",
 )
+
+bazel_dep(name = "rules_go", version = "0.60.0")
+
+go_sdk = use_extension("@rules_go//go:extensions.bzl", "go_sdk")
+go_sdk.download(version = "1.24.12")
