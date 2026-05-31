@@ -21,16 +21,6 @@ genfile(
 )
 
 sh_test(
-    name = "test_resolve_gotopt2",
-    srcs = [
-        "test_resolve_gotopt2.bash",
-    ],
-    data = [
-        "@rules_bid//build:resolve",
-    ],
-)
-
-sh_test(
     name = "test_resolve_workspace",
     srcs = [
         "test_resolve_workspace.bash",
