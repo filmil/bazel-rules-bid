@@ -1,10 +1,9 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
-load("@rules_go//go:def.bzl", "go_binary", "go_library")
+load("@gotopt2//build:gotopt2.bzl", "gotopt2_generate_bash")
+load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
 load("@rules_shell//shell:sh_library.bzl", "sh_library")
 
-
 exports_files([
-    "resolve_gotopt.bash",
     "resolve_workspace.bash",
 ])
 
@@ -12,18 +11,21 @@ package(
     default_visibility = ["//visibility:public"],
 )
 
-go_library(
-    name = "docker_run_lib",
-    srcs = ["docker_run/main.go"],
-    importpath = "github.com/filmil/bazel-rules-bid/build/docker_run",
-    visibility = ["//visibility:private"],
-    deps = ["@com_github_bitfield_script//:script"],
+gotopt2_generate_bash(
+    name = "docker_run_flags",
+    src = "docker_run_flags.yaml",
+    out = "docker_run_flags.bash",
 )
 
-go_binary(
+sh_binary(
     name = "docker_run",
-    embed = [":docker_run_lib"],
-    visibility = ["//visibility:public"],
+    srcs = ["docker_run.sh"],
+    data = [
+        ":docker_run_flags.bash",
+        ":resolve_workspace.bash",
+        "@fshlib//:log",
+        "@rules_shell//shell/runfiles",
+    ],
 )
 
 bzl_library(
@@ -34,12 +36,9 @@ bzl_library(
 sh_library(
     name = "resolve",
     srcs = [
-        "resolve_gotopt.bash",
         "resolve_workspace.bash",
     ],
     data = [
-        "@multitool_rules_bid//tools/gotopt2",
         "@rules_shell//shell/runfiles",
     ],
 )
-

@@ -395,8 +395,8 @@
     "https://raw.githubusercontent.com/filmil/bazel-registry/main/modules/googletest/1.14.0/MODULE.bazel": "not found",
     "https://raw.githubusercontent.com/filmil/bazel-registry/main/modules/googletest/1.15.2/MODULE.bazel": "not found",
     "https://raw.githubusercontent.com/filmil/bazel-registry/main/modules/googletest/1.17.0/MODULE.bazel": "not found",
-    "https://raw.githubusercontent.com/filmil/bazel-registry/main/modules/gotopt2/2.5.1/MODULE.bazel": "f346b5747b23fddaa976e9b68fdeb803f36404e28783979d60c7709d952567ef",
-    "https://raw.githubusercontent.com/filmil/bazel-registry/main/modules/gotopt2/2.5.1/source.json": "42908bc7d45349dfd4b9567cb525955981ade47bb015b1db499bb16d5cc40c7c",
+    "https://raw.githubusercontent.com/filmil/bazel-registry/main/modules/gotopt2/2.7.1/MODULE.bazel": "94e1ec81dc6f1764aeb12daa30f89c1664f32dde307fee407ef115ea6739d747",
+    "https://raw.githubusercontent.com/filmil/bazel-registry/main/modules/gotopt2/2.7.1/source.json": "8b4cecd6e4c24a4009d657b8f663cd442903a0c1fb4a34a5285cff1e9ba169a4",
     "https://raw.githubusercontent.com/filmil/bazel-registry/main/modules/jq.bzl/0.1.0/MODULE.bazel": "not found",
     "https://raw.githubusercontent.com/filmil/bazel-registry/main/modules/jsoncpp/1.9.5/MODULE.bazel": "not found",
     "https://raw.githubusercontent.com/filmil/bazel-registry/main/modules/jsoncpp/1.9.6.bcr.2/MODULE.bazel": "not found",
@@ -774,6 +774,57 @@
                 ]
               },
               "toolchain_target_settings": {}
+            }
+          }
+        }
+      }
+    },
+    "@@tar.bzl+//tar:extensions.bzl%toolchains": {
+      "general": {
+        "bzlTransitiveDigest": "/2afh6fPjq/rcyE/jztQDK3ierehmFFngfvmqyRv72M=",
+        "usagesDigest": "maF8qsAIqeH1ey8pxP0gNZbvJt34kLZvTFeQ0ntrJVA=",
+        "recordedInputs": [],
+        "generatedRepoSpecs": {
+          "bsd_tar_toolchains": {
+            "repoRuleId": "@@tar.bzl+//tar/toolchain:toolchain.bzl%tar_toolchains_repo",
+            "attributes": {
+              "user_repository_name": "bsd_tar_toolchains"
+            }
+          },
+          "bsd_tar_toolchains_darwin_amd64": {
+            "repoRuleId": "@@tar.bzl+//tar/toolchain:platforms.bzl%bsdtar_binary_repo",
+            "attributes": {
+              "platform": "darwin_amd64"
+            }
+          },
+          "bsd_tar_toolchains_darwin_arm64": {
+            "repoRuleId": "@@tar.bzl+//tar/toolchain:platforms.bzl%bsdtar_binary_repo",
+            "attributes": {
+              "platform": "darwin_arm64"
+            }
+          },
+          "bsd_tar_toolchains_linux_amd64": {
+            "repoRuleId": "@@tar.bzl+//tar/toolchain:platforms.bzl%bsdtar_binary_repo",
+            "attributes": {
+              "platform": "linux_amd64"
+            }
+          },
+          "bsd_tar_toolchains_linux_arm64": {
+            "repoRuleId": "@@tar.bzl+//tar/toolchain:platforms.bzl%bsdtar_binary_repo",
+            "attributes": {
+              "platform": "linux_arm64"
+            }
+          },
+          "bsd_tar_toolchains_windows_amd64": {
+            "repoRuleId": "@@tar.bzl+//tar/toolchain:platforms.bzl%bsdtar_binary_repo",
+            "attributes": {
+              "platform": "windows_amd64"
+            }
+          },
+          "bsd_tar_toolchains_windows_arm64": {
+            "repoRuleId": "@@tar.bzl+//tar/toolchain:platforms.bzl%bsdtar_binary_repo",
+            "attributes": {
+              "platform": "windows_arm64"
             }
           }
         }
