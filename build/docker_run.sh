@@ -139,6 +139,60 @@ if [[ "${gotopt2_freeargs__list}" != "" ]]; then
   done
 fi
 
+# ---- Container runtime detection and adaptation ----------------------
+# Bazel actions run with a scrubbed environment ("env -").  Bash falls
+# back to a built-in default PATH for its own command lookups, but child
+# processes inherit the empty environment; rootless podman in particular
+# execs helpers (conmon, nsenter, crun) that need PATH, and locates its
+# state via HOME and XDG_RUNTIME_DIR.  Restore conventional values when
+# they are missing; keep them when the caller provided them.
+export PATH="${PATH:-/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin}"
+if [[ -z "${HOME:-}" ]]; then
+  export HOME="$(getent passwd "$(id -u)" | cut -d: -f6)"
+fi
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+
+# Prefer `docker` when present (it may legitimately be a shim for
+# another runtime); fall back to `podman` on docker-less hosts.
+if command -v docker >/dev/null 2>&1; then
+  _container_cli="docker"
+elif command -v podman >/dev/null 2>&1; then
+  _container_cli="podman"
+else
+  echo "docker_run.sh: neither docker nor podman found in PATH" >&2
+  exit 1
+fi
+
+# The two CLIs speak different flag dialects.  Rootless podman needs
+# --userns=keep-id so output files land owned by the invoking user; the
+# real docker CLI rejects that podman-only flag outright ("--userns:
+# invalid USER mode") -- e.g. in CI setups where jobs get a docker CLI
+# pointed at a podman socket.  Detect the flavor and adapt the free
+# arguments, so callers do not need to know which runtime is installed.
+if "${_container_cli}" --version 2>/dev/null | grep -qi podman; then
+  _cli_flavor="podman"
+else
+  _cli_flavor="docker"
+fi
+
+_adapted_freeargs=()
+for one in "${_freeargs[@]}"; do
+  if [[ "${_cli_flavor}" == "docker" && \
+        "${one}" == --userns=keep-id* ]]; then
+    log::debug "dropping podman-only flag for docker CLI: ${one}"
+    continue
+  fi
+  _adapted_freeargs+=("${one}")
+done
+_freeargs=("${_adapted_freeargs[@]}")
+if [[ "${_cli_flavor}" == "podman" ]]; then
+  case " ${_freeargs[*]-} " in
+    *" --userns=keep-id"*) ;;
+    *) _freeargs+=("--userns=keep-id") ;;
+  esac
+fi
+# -----------------------------------------------------------------------
+
 # Provide tools binaries here.
 readonly _tools_dir="$(mktemp -d --tmpdir=${_output_dir} tools-XXXXXX)"
 if [[ "${#gotopt2_tools__list[@]}" != 0 ]]; then
@@ -163,7 +217,7 @@ fi
 
 # XXX: Does this slow things down too much?
 sync
-docker run --rm --interactive \
+"${_container_cli}" run --rm --interactive \
   -u "${_uid}:${_gid}" \
   -v "${_output_root}:${_output_root}:rw" \
   -v "${_home_dir}:${_home_dir}:rw" \
