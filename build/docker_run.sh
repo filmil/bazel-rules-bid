@@ -85,17 +85,37 @@ fi
 # This is the output directory (needs to be mounted writable).
 readonly _output_dir="$(realpath $(dirname ${gotopt2_dir_reference}))"
 
-readonly _build_root="${PWD%%/_bazel_*}"
 readonly _run_dir="${PWD}"
-readonly _cache_dir="${PWD%%/bazel/_bazel_*}"
-readonly _output_root="${_cache_dir}/bazel"
 
-### HACK! HACK! HACK!
-# User's home dir is usually here somewhere. We're assuming that the source
-# code is checked out here.  If not, there will be... trouble.
-#
-# I think I can fix this, but it will take a bit of time.
-readonly _home_dir="${_build_root%%/.cache/*}"
+# The Bazel output base, derived from the invariant execroot layout rather
+# than from any assumption about where the output tree lives on disk. A
+# build action always runs with its working directory set to the execroot,
+# whose absolute path is
+#     <output_base>/execroot/<workspace_name>
+# Everything Bazel controls -- this execroot, the bazel-out tree beneath
+# it, and external repositories under <output_base>/external -- lives under
+# the output base, so mounting it exposes every input-symlink target and
+# every declared output, writable, in the container. This works for the
+# default ~/.cache/bazel/_bazel_<user>/... layout AND for any custom
+# --output_user_root / --output_base. (The previous implementation
+# string-matched "/bazel/_bazel_" and "/.cache/" against $PWD and silently
+# synthesised a non-existent mount path -- e.g. <execroot>/bazel -- under
+# any layout that did not contain those literal segments.)
+readonly _output_base="${_run_dir%%/execroot/*}"
+
+# The real source checkout: Bazel symlinks inputs into the execroot from
+# the source tree, and the container must be able to follow those symlinks
+# to their real host paths. Resolve the reference file through its symlink
+# and walk up to the enclosing workspace root, so the checkout is found
+# wherever it happens to live.
+_source_root="$(resolve_workspace "$(readlink -m "${gotopt2_dir_reference}")")" \
+    || _source_root=""
+if [[ -z "${_source_root}" ]]; then
+  # No workspace marker found above the reference: fall back to its real
+  # directory so at least the immediate source files are visible.
+  _source_root="$(dirname "$(readlink -m "${gotopt2_dir_reference}")")"
+fi
+readonly _source_root
 
 # Required, so that the docker command runs as your UID:GID, so that the output
 # file is created with your permissions.  Otherwise it will get created as
@@ -215,12 +235,21 @@ if [[ -d "${_github_runner_special}" ]]; then
   )
 fi
 
+# Mount the source tree only when it is not already covered by the output
+# base mount, so podman/docker never sees two overlapping -v targets (an
+# identical destination mounted twice is an error).
+_source_mount=()
+case "${_source_root}/" in
+  "${_output_base}/"*) : ;;  # already inside the output base mount
+  *) _source_mount=(-v "${_source_root}:${_source_root}:rw") ;;
+esac
+
 # XXX: Does this slow things down too much?
 sync
 "${_container_cli}" run --rm --interactive \
   -u "${_uid}:${_gid}" \
-  -v "${_output_root}:${_output_root}:rw" \
-  -v "${_home_dir}:${_home_dir}:rw" \
+  -v "${_output_base}:${_output_base}:rw" \
+  "${_source_mount[@]}" \
   -v "${_tools_dir}:/tools:ro" \
   ${_mounts[*]} \
   ${_envs[*]} \
