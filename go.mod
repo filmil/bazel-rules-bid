@@ -1,6 +1,6 @@
 module github.com/filmil/bazel-rules-bid/build/docker_run
 
-go 1.22.4
+go 1.26.10
 
 require github.com/bitfield/script v0.24.1
 
