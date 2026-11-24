@@ -5,6 +5,9 @@ load("@rules_shell//shell:sh_library.bzl", "sh_library")
 load("@rules_shell//shell:sh_test.bzl", "sh_test")
 
 exports_files([
+    # Kept for callers such as rules_vivado's pnr.bash, which source it to
+    # find the gotopt2 binary (issue 63). Removed in 2.4.0 by mistake.
+    "resolve_gotopt.bash",
     "resolve_workspace.bash",
 ])
 
@@ -37,9 +40,11 @@ bzl_library(
 sh_library(
     name = "resolve",
     srcs = [
+        "resolve_gotopt.bash",
         "resolve_workspace.bash",
     ],
     data = [
+        "@multitool_rules_bid//tools/gotopt2",
         "@rules_shell//shell/runfiles",
     ],
 )
@@ -50,4 +55,12 @@ sh_test(
     srcs = ["docker_run_args_test.sh"],
     args = ["$(rootpath :docker_run)"],
     data = [":docker_run"],
+)
+
+# resolve_gotopt.bash finds a working gotopt2 binary through :resolve, the
+# way rules_vivado's pnr.bash uses it (issue 63).
+sh_test(
+    name = "resolve_gotopt_test",
+    srcs = ["resolve_gotopt_test.sh"],
+    deps = [":resolve"],
 )
