@@ -29,4 +29,6 @@ jobs:
         run: "bazel test //..."
       - name: "Integration test"
         run: "cd integration && bazel build //..."
+      - name: Test rules_bid as an external module
+        run: "cd integration && bazel test --test_output=errors //:test_resolve_gotopt //:test_resolve_workspace"
 

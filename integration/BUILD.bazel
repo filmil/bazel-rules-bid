@@ -30,3 +30,15 @@ sh_test(
         "//:MODULE.bazel",
     ],
 )
+
+# rules_vivado's pnr.bash sources resolve_gotopt.bash from :resolve and runs
+# the gotopt2 binary it finds (issue 63).
+sh_test(
+    name = "test_resolve_gotopt",
+    srcs = [
+        "test_resolve_gotopt.bash",
+    ],
+    data = [
+        "@rules_bid//build:resolve",
+    ],
+)
