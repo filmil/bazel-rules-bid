@@ -49,12 +49,38 @@ if [[ "${DEBUG}" == "true" ]]; then
   set -x
 fi
 
+# Split the command line: docker_run.sh's own flags come first, and the
+# command to run inside the container starts at the first argument that is
+# not a "--" flag, or right after a "--". Only the own flags go to the
+# generated parser. That parser keeps scanning after the first command word
+# and rejects any option it does not know, so passing it everything breaks
+# commands with options of their own: "vivado -notrace" failed with
+# "Unknown flag: -notrace" (issue #61). rules_bid 2.3.1 and earlier passed
+# such options through, and this restores that.
+_own_flags=()
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --)
+      shift
+      break
+      ;;
+    --*)
+      _own_flags+=("$1")
+      shift
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+_command=("$@")
+
 # We don't want the script to exit on parse_args error, because we want to
 # handle the --help exit code (11) specifically.
 # Since parse_args calls 'exit 11' on --help, and it's a function, we must
 # call it in a subshell to catch the exit code without exiting the script.
 set +e
-_parse_args_output=$(parse_args "${@}")
+_parse_args_output=$(parse_args "${_own_flags[@]}")
 _parse_args_exit_code=$?
 set -e
 
@@ -68,6 +94,8 @@ if [[ "${_parse_args_exit_code}" != "0" ]]; then
 fi
 
 eval "${_parse_args_output}"
+# The command is everything after the own flags, unparsed.
+gotopt2_args__=("${_command[@]}")
 
 if [[ ${gotopt2_container} == "" ]]; then
   log::error "Flag --container=... is required"
