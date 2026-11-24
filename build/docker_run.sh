@@ -50,11 +50,14 @@ if [[ "${DEBUG}" == "true" ]]; then
 fi
 
 # Split the command line: docker_run.sh's own flags come first, and the
-# command to run inside the container starts at the first argument that is
-# not a "--" flag, or right after a "--". Only the own flags go to the
-# generated parser. That parser keeps scanning after the first command word
-# and rejects any option it does not know, so passing it everything breaks
-# commands with options of their own: "vivado -notrace" failed with
+# command to run inside the container starts at the first argument that does
+# not start with "-", or right after a "--". Own flags take the
+# --name=value form (the generated parser accepts no other). Only the own
+# flags go to that parser, which rejects any flag it does not know, typos
+# with a single dash included. Everything from the command word on goes to
+# the container unchanged, options included, even ones that look like our
+# own flags. Passing the whole line to the parser broke commands with
+# options of their own: "vivado -notrace" failed with
 # "Unknown flag: -notrace" (issue #61). rules_bid 2.3.1 and earlier passed
 # such options through, and this restores that.
 _own_flags=()
@@ -64,7 +67,7 @@ while [[ $# -gt 0 ]]; do
       shift
       break
       ;;
-    --*)
+    -*)
       _own_flags+=("$1")
       shift
       ;;
